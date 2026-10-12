@@ -120,6 +120,7 @@ nmcpAggregation {
     centralPortal {
         username = System.getenv("CENTRAL_USERNAME")
         password = System.getenv("CENTRAL_PASSWORD")
-        publishingType = "USER_MANAGED"
+        // AUTOMATIC: Central publishes as soon as validation passes (set CENTRAL_PUBLISH=manual to review in the portal first)
+        publishingType = if (System.getenv("CENTRAL_PUBLISH") == "manual") "USER_MANAGED" else "AUTOMATIC"
     }
 }
