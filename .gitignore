@@ -2,3 +2,6 @@
 build/
 *.class
 .idea/
+
+# Local-only notes
+TESTING.md
