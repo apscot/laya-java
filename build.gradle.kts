@@ -51,19 +51,34 @@ subprojects {
                 publications.create<MavenPublication>("maven") { from(components["java"]) }
             publications.withType<MavenPublication>().configureEach {
                 pom {
-                    name.set(project.name)
+                    name.set(
+                        when (project.name) {
+                            "laya-core" -> "laya-java core"
+                            "laya-accelerate" -> "laya-java Accelerate backend"
+                            "laya-api" -> "laya-java API and server"
+                            "laya-client" -> "laya-java client"
+                            "laya-spring-boot-starter" -> "laya-java Spring Boot starter"
+                            "laya-gradle-plugin" -> "laya-java Gradle plugin"
+                            else -> "laya-java BOM"
+                        }
+                    )
                     description.set(
                         when (project.name) {
-                            "laya-core" -> "Pure-Java inference engine for Laya typed-decision models (ModernBERT + decision heads)"
-                            "laya-accelerate" -> "Optional macOS Accelerate (cblas_sgemm) backend for laya-core via JNA"
-                            "laya-api" -> "Jev /v1/systemone and OpenAI /v1/decisions protocol handlers and a dependency-free HTTP server for Laya"
-                            "laya-client" -> "Tiny JDK-only client for Laya / Jev compatible decision servers"
-                            "laya-spring-boot-starter" -> "Spring Boot starter exposing /v1/systemone and /v1/decisions backed by a local Laya model"
-                            "laya-gradle-plugin" -> "Gradle plugin to run a local Laya server for development and integration tests"
-                            else -> "Laya for Java: local typed decisions (choice, score, yes/no) with Jev and OpenAI Decisions compatible endpoints"
+                            "laya-core" -> "Run Laya typed-decision models (yes/no, choice, score) in pure Java: tokenizer, ModernBERT encoder and decision heads, no Python or native model runtime."
+                            "laya-accelerate" -> "Optional macOS speed-up for laya-core using Apple's Accelerate framework through JNA. Picked up automatically when on the classpath."
+                            "laya-api" -> "Laya over HTTP: OpenAI Decisions API (/v1/decisions) and Jev / System One (/v1/systemone) handlers plus a dependency-free standalone server. No Spring required."
+                            "laya-client" -> "Tiny JDK-only client for Laya and Jev-compatible decision servers (/v1/systemone, /v1/decisions)."
+                            "laya-spring-boot-starter" -> "Spring Boot 3 starter: add one dependency and your app serves Laya at /v1/decisions (OpenAI Decisions API) and /v1/systemone (Jev, works with Spring AI TypeSafe)."
+                            "laya-gradle-plugin" -> "Gradle plugin that starts and stops a local Laya server for development and integration tests (layaServe, layaStop)."
+                            else -> "Bill of Materials that keeps all laya-java artifacts on the same version."
                         }
                     )
                     url.set("https://github.com/apscot/laya-java")
+                    inceptionYear.set("2026")
+                    issueManagement {
+                        system.set("GitHub")
+                        url.set("https://github.com/apscot/laya-java/issues")
+                    }
                     licenses {
                         license {
                             name.set("Apache License, Version 2.0")

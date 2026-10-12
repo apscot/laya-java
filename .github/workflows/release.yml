@@ -2,6 +2,9 @@ name: Release
 on:
   push:
     tags: ["v*"]
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -19,3 +22,23 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           gradle -PlayaVersion="$VERSION" nmcpPublishAggregationToCentralPortal --no-daemon
+      - name: Create the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PRE=""
+          if [[ "$VERSION" == *-* ]]; then PRE="--prerelease"; fi
+          cat > notes.md <<EOF
+          **laya-java ${VERSION}** is on Maven Central under \`io.github.apscot\` (it can take up to ~30 minutes to appear after you press Publish in the Central Portal).
+
+          \`\`\`kotlin
+          implementation(platform("io.github.apscot:laya-bom:${VERSION}"))
+          implementation("io.github.apscot:laya-core")
+          \`\`\`
+
+          Gradle (Kotlin/Groovy) and Maven snippets for every artifact: see the [README](https://github.com/${GITHUB_REPOSITORY}#readme).
+
+          ---
+          EOF
+          gh release create "$GITHUB_REF_NAME" $PRE --title "laya-java ${VERSION}" --notes-file notes.md --generate-notes
