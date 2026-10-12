@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
       - uses: gradle/actions/setup-gradle@v4
-      - name: Publish to Maven Central (Central Portal, user-managed: review then click Publish)
+      - name: "Publish to Maven Central (Central Portal, user-managed - review, then click Publish)"
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}

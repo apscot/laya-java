@@ -7,7 +7,7 @@ java {
 
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(17)
-    options.compilerArgs.addAll(listOf("--add-modules", "jdk.incubator.vector", "-Xlint:-incubating"))
+    options.compilerArgs.addAll(listOf("--add-modules", "jdk.incubator.vector"))
 }
 
 dependencies {
