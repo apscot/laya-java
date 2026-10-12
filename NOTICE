@@ -1,0 +1,24 @@
+laya-java
+Copyright 2026 apscot and laya-java contributors
+
+This product is an independent Java port. It is not an official release of
+Convai Innovations, Laya or any related project.
+
+It includes software and design derived from:
+
+  * Laya (https://github.com/NandhaKishorM/laya)
+    Copyright Convai Innovations and Laya contributors. Licensed under Apache-2.0.
+    Token-sequence construction, question rendering, calibration and confidence
+    calculations, the decision-head architecture and the output schema follow Laya.
+
+  * laya-mlx (https://github.com/mizorewww/laya-mlx), an independent MLX port of Laya.
+    Copyright 2026 laya-mlx contributors. Licensed under Apache-2.0.
+    Used as the numerical reference for parity tests; its calibration clamping
+    ([0.5, 5.0]) and result format are reproduced here.
+
+  * The ModernBERT architecture (Hugging Face Transformers, Apache-2.0).
+
+Model weights are NOT included in this repository or in the published artifacts.
+They are downloaded at run time from Hugging Face (aac6fef/laya-mlx,
+aac6fef/laya-multilingual-mlx, aac6fef/laya-typed-decisions-mlx; originally
+convaiinnovations/laya*), each licensed Apache-2.0 by its publisher.
