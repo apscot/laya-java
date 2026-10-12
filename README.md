@@ -654,7 +654,7 @@ cd laya-java
 gradle build
 ```
 
-Tests that need model checkpoints are skipped unless `LAYA_MODEL_DIR`, `LAYA_MODEL_DIR_MULTILINGUAL` and `LAYA_MODEL_DIR_TYPED` point at local checkpoints. A Python script in `tools/` regenerates test fixtures from the reference implementation; it is a development tool and is not part of any published artifact. 
+Tests that need model checkpoints are skipped unless `LAYA_MODEL_DIR`, `LAYA_MODEL_DIR_MULTILINGUAL` and `LAYA_MODEL_DIR_TYPED` point at local checkpoints. The expected values in `laya-core/src/test/resources/fixtures` were generated from the Python `laya-mlx` reference. 
 
 Issues and pull requests are welcome.
 

@@ -6,3 +6,4 @@ build/
 # Local-only notes
 TESTING.md
 RELEASING.md
+tools/
