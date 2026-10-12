@@ -11,7 +11,7 @@ import java.util.Map;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-/** Compares the Java port with golden outputs produced by the Python reference (tools/gen_fixtures.py). */
+/** Compares the Java port with golden outputs produced by the Python reference. */
 class ParityTest {
     @ParameterizedTest
     @ValueSource(strings = {"", "multilingual", "typed"})
