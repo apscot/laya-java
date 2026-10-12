@@ -32,15 +32,30 @@ jobs:
           PRE=""
           if [[ "$VERSION" == *-* ]]; then PRE="--prerelease"; fi
           cat > notes.md <<EOF
-          **laya-java ${VERSION}** is on Maven Central under \`io.github.apscot\` (it can take up to ~30 minutes to appear after you press Publish in the Central Portal).
+          ## laya-java ${VERSION}
 
+          Run [Laya](https://github.com/NandhaKishorM/laya) typed-decision models (yes/no, choice, score) in **pure Java**, with OpenAI Decisions API and Jev compatible endpoints. No Python, no PyTorch.
+
+          ### Install
+
+          **Gradle (Kotlin DSL)**
           \`\`\`kotlin
           implementation(platform("io.github.apscot:laya-bom:${VERSION}"))
           implementation("io.github.apscot:laya-core")
           \`\`\`
 
-          Gradle (Kotlin/Groovy) and Maven snippets for every artifact: see the [README](https://github.com/${GITHUB_REPOSITORY}#readme).
+          **Maven**
+          \`\`\`xml
+          <dependency>
+            <groupId>io.github.apscot</groupId>
+            <artifactId>laya-core</artifactId>
+            <version>${VERSION}</version>
+          </dependency>
+          \`\`\`
 
-          ---
+          Artifacts on [Maven Central](https://central.sonatype.com/namespace/io.github.apscot): \`laya-core\`, \`laya-accelerate\`, \`laya-api\`, \`laya-client\`, \`laya-spring-boot-starter\`, \`laya-gradle-plugin\`, \`laya-bom\`.
+          Snippets for every artifact, usage examples and limitations are in the [README](https://github.com/${GITHUB_REPOSITORY}#readme).
+
+          ### What's changed
           EOF
           gh release create "$GITHUB_REF_NAME" $PRE --title "laya-java ${VERSION}" --notes-file notes.md --generate-notes
