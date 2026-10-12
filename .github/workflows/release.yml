@@ -19,9 +19,3 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           gradle -PlayaVersion="$VERSION" nmcpPublishAggregationToCentralPortal --no-daemon
-      - name: Publish Gradle plugin to the Plugin Portal
-        if: ${{ !contains(github.ref_name, '-') }}
-        env:
-          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
-          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
-        run: echo "Optional: apply com.gradle.plugin-publish and run :laya-gradle-plugin:publishPlugins (see RELEASING.md)"
