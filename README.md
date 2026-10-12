@@ -90,46 +90,11 @@ Seven artifacts, all on Maven Central under `io.github.apscot`, all at version *
 
 > **Needs:** JDK 17+ (that's it). About 2.5 GB of free memory for the English model. Internet on first run to fetch the weights.
 
-### 📦 Get the versions right (once)
+### 📦 Install snippets, and the BOM
 
-<details open>
-<summary><b>Gradle (Kotlin DSL)</b></summary>
+Every artifact section below shows **Gradle (Kotlin and Groovy) and Maven** snippets with the version written out, so each one works on its own.
 
-```kotlin
-dependencies {
-    implementation(platform("io.github.apscot:laya-bom:0.1.0"))
-    // …then add any artifact below without a version
-}
-```
-</details>
-
-<details>
-<summary><b>Gradle (Groovy)</b></summary>
-
-```groovy
-dependencies {
-    implementation platform('io.github.apscot:laya-bom:0.1.0')
-}
-```
-</details>
-
-<details>
-<summary><b>Maven</b></summary>
-
-```xml
-<dependencyManagement>
-  <dependencies>
-    <dependency>
-      <groupId>io.github.apscot</groupId>
-      <artifactId>laya-bom</artifactId>
-      <version>0.1.0</version>
-      <type>pom</type>
-      <scope>import</scope>
-    </dependency>
-  </dependencies>
-</dependencyManagement>
-```
-</details>
+Using several Laya artifacts? Import the BOM once and drop the versions: see [laya-bom](#-laya-bom--version-alignment).
 
 ---
 
@@ -137,8 +102,23 @@ dependencies {
 
 The heart of the project: tokenizer, ModernBERT encoder, decision heads, calibration. No dependencies at all.
 
+**Gradle (Kotlin DSL)**
 ```kotlin
-implementation("io.github.apscot:laya-core")
+implementation("io.github.apscot:laya-core:0.1.0")
+```
+
+**Gradle (Groovy DSL)**
+```groovy
+implementation 'io.github.apscot:laya-core:0.1.0'
+```
+
+**Maven**
+```xml
+<dependency>
+  <groupId>io.github.apscot</groupId>
+  <artifactId>laya-core</artifactId>
+  <version>0.1.0</version>
+</dependency>
 ```
 
 ```java
@@ -198,8 +178,24 @@ Weights are cached in `~/.cache/laya` (set `LAYA_CACHE` to move it). Load the `A
 
 Drop-in speed-up on macOS. It calls Apple's built-in Accelerate library (`cblas_sgemm`) through JNA; no native code to build.
 
+**Gradle (Kotlin DSL)**
 ```kotlin
-runtimeOnly("io.github.apscot:laya-accelerate")
+runtimeOnly("io.github.apscot:laya-accelerate:0.1.0")
+```
+
+**Gradle (Groovy DSL)**
+```groovy
+runtimeOnly 'io.github.apscot:laya-accelerate:0.1.0'
+```
+
+**Maven**
+```xml
+<dependency>
+  <groupId>io.github.apscot</groupId>
+  <artifactId>laya-accelerate</artifactId>
+  <version>0.1.0</version>
+  <scope>runtime</scope>
+</dependency>
 ```
 
 That is the whole setup. `laya-core` finds it automatically. On Linux and Windows it quietly steps aside.
@@ -217,9 +213,26 @@ Switch it off for comparison: `LAYA_BACKEND=portable`. Seeing `WARNING … jna �
 
 Add the starter and your Spring Boot 3 app serves the model. Nothing else to write.
 
+**Gradle (Kotlin DSL)**
 ```kotlin
-implementation("io.github.apscot:laya-spring-boot-starter")
+implementation("io.github.apscot:laya-spring-boot-starter:0.1.0")
 ```
+
+**Gradle (Groovy DSL)**
+```groovy
+implementation 'io.github.apscot:laya-spring-boot-starter:0.1.0'
+```
+
+**Maven**
+```xml
+<dependency>
+  <groupId>io.github.apscot</groupId>
+  <artifactId>laya-spring-boot-starter</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+The starter targets **Spring Boot 3.x** (tested with 3.4) and already brings in `spring-boot-starter-web` and, at runtime, `laya-accelerate`.
 
 ```properties
 # application.properties (all optional)
@@ -248,7 +261,23 @@ Run your app and you get:
 | `laya.endpoint.base-path` | Prefix for the paths | empty |
 </details>
 
-**Run with** `--add-modules=jdk.incubator.vector -Xmx3g` for speed and headroom (Gradle `bootRun { jvmArgs(...) }`, or `JAVA_TOOL_OPTIONS="--add-modules=jdk.incubator.vector"`; note the `=`).
+**JVM flags** (`--add-modules=jdk.incubator.vector -Xmx3g`) give you speed and headroom:
+
+```kotlin
+// Gradle
+tasks.bootRun { jvmArgs("--add-modules=jdk.incubator.vector", "-Xmx3g") }
+```
+```xml
+<!-- Maven -->
+<plugin>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-maven-plugin</artifactId>
+  <configuration>
+    <jvmArguments>--add-modules=jdk.incubator.vector -Xmx3g</jvmArguments>
+  </configuration>
+</plugin>
+```
+For a packaged jar: `java --add-modules=jdk.incubator.vector -Xmx3g -jar app.jar` (or `JAVA_TOOL_OPTIONS="--add-modules=jdk.incubator.vector"`; note the `=`).
 
 **🤔 "Why is there a `model` field? Laya *is* the model."** Correct! OpenAI's and Jev's request formats require the field, so we accept it. Use `english`, `multilingual` or `typed-decisions` to pick a checkpoint. Any other value (`laya`, `gpt-6-luna`, `banana`) means *"you choose"*: the server routes by the language of the text.
 
@@ -260,10 +289,34 @@ Run your app and you get:
 
 The brains behind the endpoints, with **no Spring dependency**. Use it to run a standalone server, or to bolt Laya onto any other framework (Quarkus, Micronaut, Javalin, Vert.x…).
 
+**Gradle (Kotlin DSL)**
 ```kotlin
-implementation("io.github.apscot:laya-api")
-runtimeOnly("io.github.apscot:laya-accelerate")     // optional
+implementation("io.github.apscot:laya-api:0.1.0")
+runtimeOnly("io.github.apscot:laya-accelerate:0.1.0")
 ```
+
+**Gradle (Groovy DSL)**
+```groovy
+implementation 'io.github.apscot:laya-api:0.1.0'
+runtimeOnly 'io.github.apscot:laya-accelerate:0.1.0'
+```
+
+**Maven**
+```xml
+<dependency>
+  <groupId>io.github.apscot</groupId>
+  <artifactId>laya-api</artifactId>
+  <version>0.1.0</version>
+</dependency>
+<dependency>
+  <groupId>io.github.apscot</groupId>
+  <artifactId>laya-accelerate</artifactId>
+  <version>0.1.0</version>
+  <scope>runtime</scope>
+</dependency>
+```
+
+(`laya-accelerate` is optional.)
 
 **A standalone server in six lines**
 
@@ -306,8 +359,23 @@ Limits (same as the upstream server): 64 questions, 50,000 characters of state, 
 
 Zero dependencies beyond the JDK. Talks to laya-java, the upstream Python `laya-serve`, or any Jev-compatible endpoint.
 
+**Gradle (Kotlin DSL)**
 ```kotlin
-implementation("io.github.apscot:laya-client")
+implementation("io.github.apscot:laya-client:0.1.0")
+```
+
+**Gradle (Groovy DSL)**
+```groovy
+implementation 'io.github.apscot:laya-client:0.1.0'
+```
+
+**Maven**
+```xml
+<dependency>
+  <groupId>io.github.apscot</groupId>
+  <artifactId>laya-client</artifactId>
+  <version>0.1.0</version>
+</dependency>
 ```
 
 ```java
@@ -330,8 +398,23 @@ Also: `client.decisions(Map)` for the OpenAI format, `client.models()`, and `Lay
 
 Start a real Laya server for local development and integration tests, then shut it down.
 
+The plugin is published to Maven Central, so tell Gradle to look there. In `settings.gradle.kts`:
+
 ```kotlin
-plugins { id("io.github.apscot.laya") version "0.1.0" }
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+```
+
+**Gradle (Kotlin DSL)** — `build.gradle.kts`
+```kotlin
+plugins {
+    java
+    id("io.github.apscot.laya") version "0.1.0"
+}
 
 laya {
     model.set("aac6fef/laya-mlx")     // Hugging Face id or local folder
@@ -339,6 +422,38 @@ laya {
     testIntegration.set(true)         // start before `test`, stop after, pass -Dlaya.base-url
 }
 ```
+
+**Gradle (Groovy DSL)** — `build.gradle` (and in `settings.gradle`: `pluginManagement { repositories { mavenCentral(); gradlePluginPortal() } }`)
+```groovy
+plugins {
+    id 'java'
+    id 'io.github.apscot.laya' version '0.1.0'
+}
+
+laya {
+    model = 'aac6fef/laya-mlx'
+    port = 8002
+    testIntegration = true
+}
+```
+
+**Maven:** this is a Gradle plugin, so there is no Maven plugin. In a Maven build, start the server from your tests with `laya-api` (test scope):
+```xml
+<dependency>
+  <groupId>io.github.apscot</groupId>
+  <artifactId>laya-api</artifactId>
+  <version>0.1.0</version>
+  <scope>test</scope>
+</dependency>
+```
+```java
+@BeforeAll static void start() throws Exception {
+    server = new LayaHttpServer(ModelRegistry.defaults(), "127.0.0.1", 8002, null);
+    server.start();
+}
+@AfterAll static void stop() { server.close(); }
+```
+Run the tests with `--add-modules=jdk.incubator.vector` in the Surefire `argLine` for speed.
 
 ```bash
 ./gradlew layaServe     # starts it in the background and waits until healthy
@@ -360,10 +475,50 @@ Server logs land in `build/laya/server.log`. Other knobs: `apiKey`, `maxHeap` (d
 
 A Bill of Materials so every Laya artifact stays on the same version.
 
+Import it once, then add any Laya artifact **without a version**.
+
+**Gradle (Kotlin DSL)**
 ```kotlin
-implementation(platform("io.github.apscot:laya-bom:0.1.0"))
-implementation("io.github.apscot:laya-core")        // no version needed
-implementation("io.github.apscot:laya-client")
+dependencies {
+    implementation(platform("io.github.apscot:laya-bom:0.1.0"))
+    implementation("io.github.apscot:laya-core")            // no version needed
+    implementation("io.github.apscot:laya-client")
+}
+```
+
+**Gradle (Groovy DSL)**
+```groovy
+dependencies {
+    implementation platform('io.github.apscot:laya-bom:0.1.0')
+    implementation 'io.github.apscot:laya-core'
+    implementation 'io.github.apscot:laya-client'
+}
+```
+
+**Maven**
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>io.github.apscot</groupId>
+      <artifactId>laya-bom</artifactId>
+      <version>0.1.0</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
+<dependencies>
+  <dependency>
+    <groupId>io.github.apscot</groupId>
+    <artifactId>laya-core</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>io.github.apscot</groupId>
+    <artifactId>laya-client</artifactId>
+  </dependency>
+</dependencies>
 ```
 
 ---
@@ -499,7 +654,7 @@ cd laya-java
 gradle build
 ```
 
-Tests that need model checkpoints are skipped unless `LAYA_MODEL_DIR`, `LAYA_MODEL_DIR_MULTILINGUAL` and `LAYA_MODEL_DIR_TYPED` point at local checkpoints. A Python script in `tools/` regenerates test fixtures from the reference implementation; it is a development tool and is not part of any published artifact. Maintainers: see [RELEASING.md](RELEASING.md).
+Tests that need model checkpoints are skipped unless `LAYA_MODEL_DIR`, `LAYA_MODEL_DIR_MULTILINGUAL` and `LAYA_MODEL_DIR_TYPED` point at local checkpoints. A Python script in `tools/` regenerates test fixtures from the reference implementation; it is a development tool and is not part of any published artifact. 
 
 Issues and pull requests are welcome.
 
